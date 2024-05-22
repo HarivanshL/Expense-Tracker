@@ -1,6 +1,9 @@
 import java.awt.*;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 public class View {
 
@@ -17,6 +20,7 @@ public class View {
     private JScrollPane incomeScrollPane;
     private JButton totalButton;
     private JScrollPane totalScrollPane;
+    private JButton resetButton;
 
     public View(){
         frame = new JFrame("Expense Tracker");
@@ -36,11 +40,12 @@ public class View {
         incomeButton = new JButton("Add income");
         expenseButton = new JButton("Add expense");
         totalButton = new JButton("Calculate Total");
+        resetButton = new JButton("Reset to Default");
 
         //Text Field Setup
         incomes = new JTextField(15);
         expenses = new JTextField(15);
-        runningTotal = new JLabel("");
+        runningTotal = new JLabel("Current Total: " + getFiledata());
 
         
         //Scroll Pane Setup
@@ -63,9 +68,20 @@ public class View {
         incomeWrapperPanel.add(incomes);
         incomeWrapperPanel.add(incomeButton);
 
+        JPanel buttonLabelPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonLabelPanel.add(totalButton);
+        buttonLabelPanel.add(runningTotal);
+
         JPanel totalWrapperPanel = new JPanel();
-        totalWrapperPanel.add(totalButton);
-        totalWrapperPanel.add(runningTotal);
+        JPanel resetButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        resetButtonPanel.add(resetButton);
+        totalWrapperPanel.setLayout(new BoxLayout(totalWrapperPanel, BoxLayout.Y_AXIS));
+        totalWrapperPanel.add(buttonLabelPanel);
+        totalWrapperPanel.add(resetButtonPanel);
+
+        
+
+
 
         totalPanel.add(totalWrapperPanel);
         incomePanel.add(incomeWrapperPanel);
@@ -79,6 +95,27 @@ public class View {
 
     }
 
+    public String getFiledata() {
+        File data = new File("data.txt");
+        Scanner scanner = null;
+        String previousTotal = "";
+        try {
+            scanner = new Scanner(data);
+            while (scanner.hasNext()) {
+                previousTotal = scanner.next();
+            }
+        } catch (FileNotFoundException e) {
+            System.err.println("File not found: " + e.getMessage());
+        } finally {
+            if (scanner != null) {
+                scanner.close();
+            }
+        }
+
+        return previousTotal;
+
+    }
+
     public void setIncomeButtonActionListener(ActionListener actionListener){
         incomeButton.addActionListener(actionListener);
     }
@@ -87,6 +124,9 @@ public class View {
     }
     public void setTotalButtonActionListener(ActionListener actionListener){
         totalButton.addActionListener(actionListener);
+    }
+    public void setResetButtonActionListener(ActionListener actionListener){
+        resetButton.addActionListener(actionListener);
     }
 
     public String getCurrentExpense(){
@@ -121,4 +161,29 @@ public class View {
         frame.repaint();
     }
 
+    public void resetAll() {
+        clearIncomes();
+        clearExpenses();
+    
+        incomePanel.removeAll();
+        expensePanel.removeAll();
+    
+        // Add the input fields and buttons back to the panels
+        JPanel incomeWrapperPanel = new JPanel();
+        incomeWrapperPanel.add(incomes);
+        incomeWrapperPanel.add(incomeButton);
+        incomePanel.add(incomeWrapperPanel);
+    
+        JPanel expenseWrapperPanel = new JPanel();
+        expenseWrapperPanel.add(expenses);
+        expenseWrapperPanel.add(expenseButton);
+        expensePanel.add(expenseWrapperPanel);
+    
+        // Reset the running total label
+        runningTotal.setText("Current Total: 0");
+    
+        frame.revalidate();
+        frame.repaint();
+    }
+    
 }

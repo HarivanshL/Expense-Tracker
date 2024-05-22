@@ -34,6 +34,13 @@ public class Controller {
                 calculateTotal();
             }
         });
+
+        this.view.setResetButtonActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resetAll();
+            }
+        });
     }
 
     private void addToIncome() {
@@ -55,6 +62,11 @@ public class Controller {
         String total = String.valueOf(model.caclulateTotal());
         view.getRunningTotal(total);
 
+    }
+
+    private void resetAll(){
+        model.resetAll();
+        view.resetAll();
     }
 }
 
