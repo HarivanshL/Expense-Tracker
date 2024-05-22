@@ -1,4 +1,3 @@
-import java.util.LinkedList;
 import java.util.ArrayList;
 
 /***
@@ -9,15 +8,20 @@ public class Model {
     //I want this class to handle all the data and keep track of
     //the running expense
     //List for the expenses
-    private ArrayList<Integer> expensesList = new ArrayList<>();
-    private ArrayList<Integer> incomeList = new ArrayList<>();
+    private ArrayList<String> expensesList;
+    private ArrayList<String> incomeList;
+
+    public Model(){
+        expensesList = new ArrayList<>();
+        incomeList = new ArrayList<>();
+    }
     
 
-    public void addToExpenses(int expense){
+    public void addToExpenses(String expense){
         expensesList.add(expense);
     }
 
-    public void addToIncome(int income){
+    public void addToIncome(String income){
         incomeList.add(income);
     }
 
@@ -25,10 +29,10 @@ public class Model {
         int totalExpenses = 0;
         int totalIncome = 0;
         for(int i =0; i < expensesList.size(); ++i){
-            totalExpenses += expensesList.get(i);
+            totalExpenses += Integer.valueOf(expensesList.get((i)));
         }
         for(int i =0; i < incomeList.size(); ++i){
-            totalIncome += incomeList.get(i);
+            totalIncome += Integer.valueOf(incomeList.get((i)));
         }
 
         return totalIncome - totalExpenses;
